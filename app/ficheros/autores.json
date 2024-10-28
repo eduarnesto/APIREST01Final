@@ -1,5 +1,4 @@
-[{"id": 2, "nombre": "Kate Winslet", "nacionalidad": "Britanica", "id_pelicula": 1},
-  {"id": 3, "nombre": "Robert Downey Junior", "nacionalidad": "Estados Unidos", "id_pelicula": 2},
-  {"id": 4, "nombre": "Gwyneth Paltrow", "nacionalidad": "Estados Unidos", "id_pelicula": 2},
-  {"nombre": "Tom Holland", "nacionalidad": "Britanico", "id_pelicula": 2, "id": 5},
-  {"nombre": "Julia Roberts", "nacionalidad": "Estados Unidos", "id_pelicula": 2, "id": 6}]
+[{"id": 1, "dni": "12345678A", "nombre": "Hector", "apellidos": "Campanero"},
+  {"id": 2, "dni": "12345678A", "nombre": "Lorenzo", "apellidos": "Campanero"},
+  {"id": 3, "dni": "12345678A", "nombre": "Marco", "apellidos": "Campanero"}
+]

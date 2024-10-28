@@ -6,35 +6,39 @@ autoresBP = Blueprint('autores', __name__)
 rutaAutores = "ficheros/autores.json"
 rutaLibros = "ficheros/libros.json"
 
-@autoresBP.get('/')
-def getAutores():
+@autoresBP.get('/<int:id>')
+def getAutores(id):
     autores = leeFichero(rutaAutores)
-    return jsonify(autores), 200
-
-@autoresBP.post('/')
-def addAutores():
-    autores = leeFichero(rutaAutores)
-    libros = leeFichero(rutaLibros)
-    if request.is_json:
-        nuevoAutor = request.get_json()
-        for libro in libros:
-            if libro["id"] == nuevoAutor["id_autor"]:
-                nuevoAutor["id"] = nuevo_id(autores)
-                autores.append(nuevoAutor)
-                escribeFichero(autores, rutaAutores)
-                return nuevoAutor, 201
-        return {"error": "Libro no encontrado"}, 404
-    else:
-        return {"error": "JSON no es correcto"}, 415
-
-
-@autoresBP.delete('/<int:id>')
-@jwt_required()
-def borraAutor(id):
-    listaAutores = leeFichero(rutaAutores)
-    for autor in listaAutores:
+    for autor in autores:
         if autor["id"] == id:
-            listaAutores.remove(autor)
-            escribeFichero(listaAutores, rutaAutores)
-            return {}, 200
-    return {"error": "Autor no encontrado"}, 404
+            return autor, 200
+    return {"error" : "Autor no encontrado"}, 404
+
+@autoresBP.get('autores/<int:id>')
+def getLibros(id):
+    libros = leeFichero(rutaLibros)
+    lista = []
+    for libro in libros:
+        if libro["idAutor"] == id:
+            lista.append(libro)
+    if len(lista) > 0:
+        return lista, 200
+    return {"error": "No hay libros para el autor indicado"}, 404
+
+@autoresBP.put('/<int:id>')
+@jwt_required()
+def modificaAutor(id):
+    autores = leeFichero(rutaAutores)
+    if request.is_json:
+        nuevo_autor = request.get_json()
+        for autor in autores:
+            if autor["id"] == id:
+                autor.update(nuevo_autor)
+                escribeFichero(autores, rutaAutores)
+                return autor, 200
+        nuevo_autor["id"] = id
+        autores.append(nuevo_autor)
+        escribeFichero(autores, rutaAutores)
+        return nuevo_autor, 201
+    else:
+        return {"error": "JSON erróneo"}, 415
