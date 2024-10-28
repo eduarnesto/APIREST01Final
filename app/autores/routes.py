@@ -6,15 +6,20 @@ autoresBP = Blueprint('autores', __name__)
 rutaAutores = "ficheros/autores.json"
 rutaLibros = "ficheros/libros.json"
 
+@autoresBP.get('/')
+def getAutores():
+    autores = leeFichero(rutaAutores)
+    return jsonify(autores), 200
+
 @autoresBP.get('/<int:id>')
-def getAutores(id):
+def getAutoresId(id):
     autores = leeFichero(rutaAutores)
     for autor in autores:
         if autor["id"] == id:
             return autor, 200
     return {"error" : "Autor no encontrado"}, 404
 
-@autoresBP.get('autores/<int:id>')
+@autoresBP.get('<int:id>/libros')
 def getLibros(id):
     libros = leeFichero(rutaLibros)
     lista = []

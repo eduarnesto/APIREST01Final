@@ -1,3 +1,4 @@
+import bcrypt
 from flask import Blueprint, request
 from bcrypt import *
 from flask_jwt_extended import create_access_token
@@ -35,9 +36,21 @@ def loginUser():
                 if checkpw(contrasenyaJson, bytes.fromhex(usuario["password"])):
                     #autenticación correcta
                     token = create_access_token(identity = nombreUsuario)
-                    return {'token': token}, 200
+                    return {"token": token}, 200
                 else:
                     return {"error": "No autorizado"}, 401
         return {"error": "usuario no encontrado"}, 404
     return {"error": "JSON no es correcto"}, 415
 
+@usersBP.post("/login")
+def getUser():
+   if request.is_json:
+       user = request.get_json()
+       username = user["username"]
+       password = user["password"]
+       usuarios = leeFichero(rutaUsuarios)
+       for usuario in usuarios:
+           if usuario["username"] == username and bcrypt.checkpw(password.encode("utf-8"),bytes.fromhex(usuario["password"])):
+               return {"token": create_access_token(identity=username)}, 200
+       return {"token":"Contrasenya o usuario no valido"}, 401
+   return {"error": "Request must be JSON"}, 415
